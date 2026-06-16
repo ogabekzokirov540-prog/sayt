@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechShop - Internet Magazin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #5A52D5;
+            --secondary: #FF6584;
+            --bg: #0F0F1A;
+            --bg-card: #1A1A2E;
+            --bg-hover: #222240;
+            --text: #EAEAEA;
+            --text-muted: #8B8BA3;
+            --success: #00C853;
+            --border: #2A2A45;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; border: none; font-family: inherit; }
+        img { max-width: 100%; display: block; }
+
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        .header .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo span { color: var(--secondary); }
+        .search-box {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border 0.3s;
+        }
+        .search-box input:focus { border-color: var(--primary); }
+        .search-box::before {
+            content: "\1F50D";
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+        }
+
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .nav-btn {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+        .nav-btn:hover { border-color: var(--primary); background: var(--bg-hover); }
+        .cart-btn { position: relative; }
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--secondary);
+            color: #fff;
+            font-size: 0.7rem;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(108,99,255,0.1) 0%, rgba(255,101,132,0.05) 100%);
+            border-bottom: 1px solid var(--border);
+        }
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p { color: var(--text-muted); font-size: 1.15rem; max-width: 600px; margin: 0 auto 30px; }
+        .hero-btn {
+            display: inline-block;
+            padding: 14px 35px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .hero-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(108,99,255,0.4); }
+
+        /* Categories */
+        .categories {
+            padding: 50px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .cat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 25px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .cat-card:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .cat-card.active { border-color: var(--primary); background: rgba(108,99,255,0.1); }
+        .cat-card .icon { font-size: 2.2rem; margin-bottom: 10px; }
+        .cat-card .name { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+
+
+        /* Products */
+        .products { padding: 50px 0; }
+        .products-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .sort-select {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text);
+            font-size: 0.9rem;
+            outline: none;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 25px;
+        }
+        .product-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .product-card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .product-img {
+            height: 220px;
+            background: linear-gradient(135deg, #1e1e3a 0%, #2a2a50 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+        }
+        .product-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--secondary);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .product-fav {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            color: #fff;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .product-fav:hover, .product-fav.active { background: var(--secondary); }
+
+
+        .product-info { padding: 20px; }
+        .product-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+        .product-info .desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; }
+        .product-info .rating { color: #FFD700; font-size: 0.85rem; margin-bottom: 10px; }
+        .product-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .price { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .price .old { font-size: 0.8rem; color: var(--text-muted); text-decoration: line-through; margin-left: 8px; font-weight: 400; }
+        .add-cart-btn {
+            background: var(--primary);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .add-cart-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
+
+        /* Cart Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            justify-content: flex-end;
+            backdrop-filter: blur(3px);
+        }
+        .modal-overlay.active { display: flex; }
+        .cart-modal {
+            background: var(--bg-card);
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            padding: 30px;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        .cart-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        .cart-header h2 { font-size: 1.3rem; }
+        .close-cart {
+            background: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            padding: 5px;
+        }
+        .close-cart:hover { color: var(--text); }
+
+
+        .cart-items { flex: 1; }
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .cart-item-img {
+            width: 60px;
+            height: 60px;
+            background: var(--bg);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+        .cart-item-info { flex: 1; }
+        .cart-item-info h4 { font-size: 0.9rem; margin-bottom: 4px; }
+        .cart-item-info .cart-item-price { color: var(--primary); font-weight: 600; font-size: 0.9rem; }
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .qty-btn:hover { border-color: var(--primary); }
+        .qty-num { font-weight: 600; min-width: 20px; text-align: center; }
+        .cart-item-remove {
+            background: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            padding: 5px;
+        }
+        .cart-item-remove:hover { color: var(--secondary); }
+        .cart-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .cart-empty .empty-icon { font-size: 4rem; margin-bottom: 15px; }
+
+
+        .cart-footer {
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--success);
+            color: #fff;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        .checkout-btn:hover { opacity: 0.9; transform: scale(1.02); }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--success);
+            color: #fff;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 3000;
+            transition: transform 0.4s;
+            white-space: nowrap;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            padding: 50px 0 25px;
+            margin-top: 60px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .footer-col h4 { font-size: 1rem; margin-bottom: 15px; color: var(--text); }
+        .footer-col p, .footer-col a { font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 8px; transition: color 0.3s; }
+        .footer-col a:hover { color: var(--primary); }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header .container { flex-wrap: wrap; }
+            .search-box { order: 3; max-width: 100%; flex-basis: 100%; }
+            .hero h1 { font-size: 2rem; }
+            .hero { padding: 50px 0; }
+            .product-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
+            .cat-grid { grid-template-columns: repeat(3, 1fr); }
+            .cart-modal { max-width: 100%; }
+        }
+        @media (max-width: 480px) {
+            .product-grid { grid-template-columns: 1fr; }
+            .cat-grid { grid-template-columns: repeat(2, 1fr); }
+            .nav-btn span { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <a href="#" class="logo">Tech<span>Shop</span></a>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Mahsulot qidirish...">
+            </div>
+            <div class="nav-actions">
+                <button class="nav-btn" id="favBtn">&#10084; <span>Sevimli</span></button>
+                <button class="nav-btn cart-btn" id="cartBtn">
+                    &#128722; <span>Savatcha</span>
+                    <div class="cart-count" id="cartCount">0</div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>Eng yaxshi texnika do'koni</h1>
+            <p>Smartfonlar, noutbuklar, aksessuarlar va boshqa zamonaviy texnologiyalarni eng arzon narxlarda xarid qiling!</p>
+            <a href="#products" class="hero-btn">&#128722; Xarid qilish</a>
+        </div>
+    </section>
+
+    <!-- Kategoriyalar -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title">Kategoriyalar</h2>
+            <div class="cat-grid" id="catGrid"></div>
+        </div>
+    </section>
+
+    <!-- Mahsulotlar -->
+    <section class="products" id="products">
+        <div class="container">
+            <div class="products-header">
+                <h2 class="section-title" style="margin-bottom:0">Mahsulotlar</h2>
+                <select class="sort-select" id="sortSelect">
+                    <option value="default">Saralash</option>
+                    <option value="price-low">Narx: arzondan</option>
+                    <option value="price-high">Narx: qimmotdan</option>
+                    <option value="rating">Reyting bo'yicha</option>
+                    <option value="name">Nomi bo'yicha</option>
+                </select>
+            </div>
+            <div class="product-grid" id="productGrid"></div>
+        </div>
+    </section>
+
+
+    <!-- Cart Modal -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="cart-modal">
+            <div class="cart-header">
+                <h2>&#128722; Savatcha</h2>
+                <button class="close-cart" id="closeCart">&times;</button>
+            </div>
+            <div class="cart-items" id="cartItems"></div>
+            <div class="cart-footer" id="cartFooter"></div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>TechShop</h4>
+                    <p>Zamonaviy texnologiyalar dunyosiga xush kelibsiz. Eng sifatli mahsulotlar, eng arzon narxlarda.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Havolalar</h4>
+                    <a href="#">Bosh sahifa</a>
+                    <a href="#">Mahsulotlar</a>
+                    <a href="#">Chegirmalar</a>
+                    <a href="#">Biz haqimizda</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Yordam</h4>
+                    <a href="#">Yetkazib berish</a>
+                    <a href="#">Qaytarish</a>
+                    <a href="#">FAQ</a>
+                    <a href="#">Aloqa</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Aloqa</h4>
+                    <p>&#128222; +998 90 123 45 67</p>
+                    <p>&#128231; info@techshop.uz</p>
+                    <p>&#128205; Toshkent, Uzbekistan</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2024 TechShop. Barcha huquqlar himoyalangan.
+            </div>
+        </div>
+    </footer>
+
+
+    <script>
+    // ======== MA'LUMOTLAR ========
+    const categories = [
+        { id: 'all', name: 'Barchasi', icon: '&#128293;' },
+        { id: 'phone', name: 'Telefonlar', icon: '&#128241;' },
+        { id: 'laptop', name: 'Noutbuklar', icon: '&#128187;' },
+        { id: 'headphone', name: 'Quloqchinlar', icon: '&#127911;' },
+        { id: 'watch', name: 'Soatlar', icon: '&#8986;' },
+        { id: 'tablet', name: 'Planshetlar', icon: '&#128218;' },
+        { id: 'accessory', name: 'Aksessuarlar', icon: '&#128268;' },
+    ];
+
+    const products = [
+        { id: 1, name: 'iPhone 15 Pro Max', desc: '256GB, Titanium Blue', price: 14500000, oldPrice: 16000000, category: 'phone', icon: '&#128241;', rating: 4.9, badge: 'TOP' },
+        { id: 2, name: 'Samsung Galaxy S24 Ultra', desc: '512GB, Phantom Black', price: 13200000, oldPrice: 14800000, category: 'phone', icon: '&#128241;', rating: 4.8, badge: 'Yangi' },
+        { id: 3, name: 'MacBook Pro 14"', desc: 'M3 Pro, 18GB RAM, 512GB', price: 27500000, oldPrice: 30000000, category: 'laptop', icon: '&#128187;', rating: 5.0, badge: 'TOP' },
+        { id: 4, name: 'ASUS ROG Strix G16', desc: 'RTX 4060, i7-13650H, 16GB', price: 18900000, oldPrice: 21000000, category: 'laptop', icon: '&#128187;', rating: 4.7, badge: '-10%' },
+        { id: 5, name: 'AirPods Pro 2', desc: 'USB-C, Adaptive Audio', price: 3200000, oldPrice: 3800000, category: 'headphone', icon: '&#127911;', rating: 4.8, badge: 'HIT' },
+        { id: 6, name: 'Sony WH-1000XM5', desc: 'Noise Cancelling, 30h battery', price: 4500000, oldPrice: 5200000, category: 'headphone', icon: '&#127911;', rating: 4.9, badge: '' },
+        { id: 7, name: 'Apple Watch Ultra 2', desc: '49mm, Titanium, GPS+Cellular', price: 11200000, oldPrice: 12500000, category: 'watch', icon: '&#8986;', rating: 4.9, badge: 'Premium' },
+        { id: 8, name: 'Samsung Galaxy Watch 6', desc: '44mm, BT, Super AMOLED', price: 3800000, oldPrice: 4500000, category: 'watch', icon: '&#8986;', rating: 4.5, badge: '' },
+        { id: 9, name: 'iPad Pro 12.9"', desc: 'M2 Chip, 256GB, Wi-Fi', price: 15800000, oldPrice: 17500000, category: 'tablet', icon: '&#128218;', rating: 4.8, badge: '' },
+        { id: 10, name: 'Samsung Galaxy Tab S9+', desc: '12.4", 256GB, S Pen', price: 12500000, oldPrice: 13800000, category: 'tablet', icon: '&#128218;', rating: 4.6, badge: 'Yangi' },
+        { id: 11, name: 'MagSafe simsiz zaryadlovchi', desc: '15W tez zaryadlash', price: 850000, oldPrice: 1100000, category: 'accessory', icon: '&#128268;', rating: 4.4, badge: '-23%' },
+        { id: 12, name: 'Anker PowerBank 20000mAh', desc: 'USB-C, 65W PD', price: 680000, oldPrice: 850000, category: 'accessory', icon: '&#128268;', rating: 4.7, badge: 'HIT' },
+    ];
+
+
+    // ======== HOLATLAR ========
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    let activeCategory = 'all';
+
+    // ======== YORDAMCHI FUNKSIYALAR ========
+    function formatPrice(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + " so'm";
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.innerHTML = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function saveCart() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+    }
+
+    function saveFavorites() {
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+    }
+
+    function updateCartCount() {
+        const total = cart.reduce((sum, item) => sum + item.qty, 0);
+        document.getElementById('cartCount').textContent = total;
+    }
+
+
+    // ======== KATEGORIYALAR RENDER ========
+    function renderCategories() {
+        const grid = document.getElementById('catGrid');
+        grid.innerHTML = categories.map(cat => `
+            <div class="cat-card ${activeCategory === cat.id ? 'active' : ''}" onclick="filterCategory('${cat.id}')">
+                <div class="icon">${cat.icon}</div>
+                <div class="name">${cat.name}</div>
+            </div>
+        `).join('');
+    }
+
+    function filterCategory(catId) {
+        activeCategory = catId;
+        renderCategories();
+        renderProducts();
+    }
+
+    // ======== MAHSULOTLAR RENDER ========
+    function getFilteredProducts() {
+        let filtered = [...products];
+
+        // Kategoriya
+        if (activeCategory !== 'all') {
+            filtered = filtered.filter(p => p.category === activeCategory);
+        }
+
+        // Qidirish
+        const search = document.getElementById('searchInput').value.toLowerCase().trim();
+        if (search) {
+            filtered = filtered.filter(p =>
+                p.name.toLowerCase().includes(search) ||
+                p.desc.toLowerCase().includes(search)
+            );
+        }
+
+        // Saralash
+        const sort = document.getElementById('sortSelect').value;
+        switch(sort) {
+            case 'price-low': filtered.sort((a,b) => a.price - b.price); break;
+            case 'price-high': filtered.sort((a,b) => b.price - a.price); break;
+            case 'rating': filtered.sort((a,b) => b.rating - a.rating); break;
+            case 'name': filtered.sort((a,b) => a.name.localeCompare(b.name)); break;
+        }
+        return filtered;
+    }
+
+    function renderProducts() {
+        const grid = document.getElementById('productGrid');
+        const filtered = getFilteredProducts();
+
+        if (filtered.length === 0) {
+            grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);grid-column:1/-1;padding:60px 0;font-size:1.1rem;">&#128533; Mahsulot topilmadi</p>';
+            return;
+        }
+
+        grid.innerHTML = filtered.map(p => {
+            const isFav = favorites.includes(p.id);
+            const stars = '&#9733;'.repeat(Math.floor(p.rating)) + (p.rating % 1 ? '&#9734;' : '');
+            return `
+            <div class="product-card">
+                <div class="product-img">
+                    ${p.icon}
+                    ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+                    <button class="product-fav ${isFav ? 'active' : ''}" onclick="toggleFav(${p.id})">
+                        ${isFav ? '&#10084;' : '&#9825;'}
+                    </button>
+                </div>
+                <div class="product-info">
+                    <h3>${p.name}</h3>
+                    <p class="desc">${p.desc}</p>
+                    <div class="rating">${stars} ${p.rating}</div>
+                    <div class="product-bottom">
+                        <div class="price">
+                            ${formatPrice(p.price)}
+                            ${p.oldPrice ? `<span class="old">${formatPrice(p.oldPrice)}</span>` : ''}
+                        </div>
+                        <button class="add-cart-btn" onclick="addToCart(${p.id})">+ Savatga</button>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+
+    // ======== SAVATCHA FUNKSIYALARI ========
+    function addToCart(id) {
+        const product = products.find(p => p.id === id);
+        const existing = cart.find(item => item.id === id);
+        if (existing) {
+            existing.qty++;
+        } else {
+            cart.push({ id: product.id, name: product.name, price: product.price, icon: product.icon, qty: 1 });
+        }
+        saveCart();
+        showToast('&#10004; ' + product.name + ' savatchaga qo\'shildi!');
+    }
+
+    function removeFromCart(id) {
+        cart = cart.filter(item => item.id !== id);
+        saveCart();
+        renderCart();
+    }
+
+    function changeQty(id, delta) {
+        const item = cart.find(i => i.id === id);
+        if (!item) return;
+        item.qty += delta;
+        if (item.qty <= 0) { removeFromCart(id); return; }
+        saveCart();
+        renderCart();
+    }
+
+    function renderCart() {
+        const itemsDiv = document.getElementById('cartItems');
+        const footerDiv = document.getElementById('cartFooter');
+
+        if (cart.length === 0) {
+            itemsDiv.innerHTML = `
+                <div class="cart-empty">
+                    <div class="empty-icon">&#128722;</div>
+                    <p>Savatcha bo'sh</p>
+                </div>`;
+            footerDiv.innerHTML = '';
+            return;
+        }
+
+        itemsDiv.innerHTML = cart.map(item => `
+            <div class="cart-item">
+                <div class="cart-item-img">${item.icon}</div>
+                <div class="cart-item-info">
+                    <h4>${item.name}</h4>
+                    <div class="cart-item-price">${formatPrice(item.price)}</div>
+                </div>
+                <div class="qty-controls">
+                    <button class="qty-btn" onclick="changeQty(${item.id}, -1)">&minus;</button>
+                    <span class="qty-num">${item.qty}</span>
+                    <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+                </div>
+                <button class="cart-item-remove" onclick="removeFromCart(${item.id})">&times;</button>
+            </div>
+        `).join('');
+
+        const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+        footerDiv.innerHTML = `
+            <div class="cart-total">
+                <span>Jami:</span>
+                <span>${formatPrice(total)}</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">&#128179; Buyurtma berish</button>
+        `;
+    }
+
+    function checkout() {
+        if (cart.length === 0) return;
+        const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+        showToast('&#127881; Buyurtmangiz qabul qilindi! Jami: ' + formatPrice(total));
+        cart = [];
+        saveCart();
+        renderCart();
+        document.getElementById('cartModal').classList.remove('active');
+    }
+
+
+    // ======== SEVIMLILAR ========
+    function toggleFav(id) {
+        const idx = favorites.indexOf(id);
+        if (idx === -1) {
+            favorites.push(id);
+            showToast('&#10084; Sevimlilarga qo\'shildi');
+        } else {
+            favorites.splice(idx, 1);
+            showToast('Sevimlilardan olib tashlandi');
+        }
+        saveFavorites();
+        renderProducts();
+    }
+
+    // ======== EVENTLAR ========
+    // Savatcha ochish/yopish
+    document.getElementById('cartBtn').addEventListener('click', () => {
+        document.getElementById('cartModal').classList.add('active');
+        renderCart();
+    });
+    document.getElementById('closeCart').addEventListener('click', () => {
+        document.getElementById('cartModal').classList.remove('active');
+    });
+    document.getElementById('cartModal').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            document.getElementById('cartModal').classList.remove('active');
+        }
+    });
+
+    // Qidirish
+    document.getElementById('searchInput').addEventListener('input', renderProducts);
+
+    // Saralash
+    document.getElementById('sortSelect').addEventListener('change', renderProducts);
+
+    // Sevimlilar tugmasi
+    document.getElementById('favBtn').addEventListener('click', () => {
+        if (activeCategory === 'favorites') {
+            activeCategory = 'all';
+        } else {
+            activeCategory = 'favorites';
+        }
+        renderCategories();
+        if (activeCategory === 'favorites') {
+            const grid = document.getElementById('productGrid');
+            const favProducts = products.filter(p => favorites.includes(p.id));
+            if (favProducts.length === 0) {
+                grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);grid-column:1/-1;padding:60px 0;font-size:1.1rem;">&#10084; Sevimli mahsulotlar yo\'q</p>';
+            } else {
+                activeCategory = 'all';
+                const tmp = [...products];
+                // Faqat sevimlilarni ko'rsatish
+                grid.innerHTML = favProducts.map(p => {
+                    const stars = '&#9733;'.repeat(Math.floor(p.rating));
+                    return `
+                    <div class="product-card">
+                        <div class="product-img">
+                            ${p.icon}
+                            <button class="product-fav active" onclick="toggleFav(${p.id})">&#10084;</button>
+                        </div>
+                        <div class="product-info">
+                            <h3>${p.name}</h3>
+                            <p class="desc">${p.desc}</p>
+                            <div class="rating">${stars} ${p.rating}</div>
+                            <div class="product-bottom">
+                                <div class="price">${formatPrice(p.price)}</div>
+                                <button class="add-cart-btn" onclick="addToCart(${p.id})">+ Savatga</button>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+                activeCategory = 'favorites';
+            }
+        } else {
+            renderProducts();
+        }
+    });
+
+    // ======== BOSHLASH ========
+    renderCategories();
+    renderProducts();
+    updateCartCount();
+    </script>
+</body>
+</html>
